@@ -1,4 +1,4 @@
-var Temp = Backbone.Model.extend({
+const Temp = Backbone.Model.extend({
   urlRoot: 'http://192.168.0.101:8000/temp'
 })
 

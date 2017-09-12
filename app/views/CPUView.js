@@ -8,6 +8,7 @@ const CPUView = Backbone.Marionette.View.extend({
     var model = this.model
 
     socket.on('cpu', (data) => {
+      console.log('cpu update...')
       model.set('cpu', data)
     })
   },

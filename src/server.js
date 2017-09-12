@@ -6,6 +6,7 @@ import http from 'http'
 import socket from 'socket.io'
 import router from './router'
 import execa from 'execa'
+import _ from 'lodash'
 
 const _pkg = require(path.join(path.dirname(__dirname), 'package.json'))
 const _bootstrapDir = require.resolve('bootstrap').match(/.*\/node_modules\/[^/]+\//)[0]
@@ -14,6 +15,9 @@ var app = express()
 var server = http.Server(app)
 var port = process.env['PORT']
 var io = socket.listen(server)
+var temp = ''
+var cpu = ''
+var mem = ''
 
 app.use(favicon(path.join(__dirname, 'resources', 'images', 'favicon.png')))
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -26,8 +30,14 @@ setInterval(() => {
   execa.shell('iostat')
     .then(result => {
       result = result.stdout.split('\n')
-      var cpu = round(100 - result[3].split(/\s+/)[6], 2)
-      io.sockets.emit('cpu', cpu)
+      var retval = round(100 - result[3].split(/\s+/)[6], 2)
+
+      if (!_.isEqual(cpu, retval)) {
+        console.log('emitting cpu...')
+        io.sockets.emit('cpu', retval)
+      }
+
+      cpu = retval
     })
 }, 1000)
 
@@ -45,7 +55,12 @@ setInterval(() => {
         free: row[3]
       }
 
-      io.sockets.emit('mem', retval)
+      if (!_.isEqual(mem, retval)) {
+        console.log('emitting memory...')
+        io.sockets.emit('mem', retval)
+      }
+
+      mem = retval
     })
 }, 1000)
 
@@ -61,7 +76,12 @@ setInterval(() => {
       celcius: round(data[0], 2)
     }
 
-    io.sockets.emit('temp', retval)
+    if (!_.isEqual(temp, retval)) {
+      console.log('emitting temperature...')
+      io.sockets.emit('temp', retval)
+    }
+
+    temp = retval
   })
 }, 1000)
 

@@ -7,6 +7,7 @@ const MemoryView = Backbone.Marionette.View.extend({
 
   initialize: function (options) {
     socket.on('mem', data => {
+      console.log('memory update...')
       this.model.set('free', data.free)
       this.model.set('total', data.total)
       this.model.set('used', data.used)

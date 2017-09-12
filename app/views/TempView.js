@@ -7,6 +7,7 @@ const TempView = Backbone.Marionette.View.extend({
   li: 'div',
   initialize: function (options) {
     socket.on('temp', data => {
+      console.log('temp update...')
       this.model.set('fahrenheit', data.fahrenheit)
       this.model.set('celcius', data.celcius)
     })
