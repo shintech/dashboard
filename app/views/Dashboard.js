@@ -1,6 +1,7 @@
 import DisksView from './DisksView'
 import TempView from './TempView'
 import MemoryView from './MemoryView'
+import CPUView from './CPUView'
 
 const Dashboard = Backbone.Marionette.View.extend({
   initialize: function (options) {
@@ -10,7 +11,8 @@ const Dashboard = Backbone.Marionette.View.extend({
   regions: {
     'temp': '.temp',
     'disk': '.disk',
-    'memory': '.memory'
+    'memory': '.memory',
+    'cpu': '.cpu'
   },
 
   template: require('../templates/dashboard-view-template.html'),
@@ -36,6 +38,14 @@ const Dashboard = Backbone.Marionette.View.extend({
     this.disks.fetch({
       success: function (data) {
         self.showChildView('disk', new DisksView({ collection: data }))
+      }
+    })
+
+    $.ajax({
+      type: 'GET',
+      url: 'http://192.168.0.101:8000/cpu',
+      success: (data) => {
+        self.showChildView('cpu', new CPUView({ cpu: data }))
       }
     })
   }

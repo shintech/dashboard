@@ -71,4 +71,22 @@ router.route('/memory')
   })
 })
 
+router.route('/cpu')
+.get((req, res) => {
+  execa.shell('iostat')
+  .then(result => {
+    result = result.stdout.split('\n')
+    var cpu = round(100 - result[3].split(/\s+/)[6], 2)
+
+    res.status(200)
+    .json({
+      cpu: cpu
+    })
+  })
+})
+
+function round (value, decimals) {
+  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals)
+}
+
 export default router
