@@ -25,7 +25,8 @@ const config = {
   resolve: {
     alias: {
       'marionette': 'backbone.marionette',
-      'underscore': 'lodash'
+      'underscore': 'lodash',
+      'socket.io-client': path.join(__dirname, 'node_modules', 'socket.io-client', 'dist', 'socket.io.js')
     }
   },
   module: {
@@ -56,7 +57,8 @@ const config = {
     HtmlWebpackPluginConfig,
     new webpack.ProvidePlugin({
       $: 'jquery',
-      _: 'lodash'
+      _: 'lodash',
+      io: 'socket.io-client'
     }),
     new ExtractTextPlugin('bundle.css'),
     new webpack.LoaderOptionsPlugin({

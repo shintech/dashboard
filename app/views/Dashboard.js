@@ -6,6 +6,9 @@ import CPUView from './CPUView'
 const Dashboard = Backbone.Marionette.View.extend({
   initialize: function (options) {
     this.disks = options.disks
+    this.cpu = options.cpu
+    this.memory = options.memory
+    this.temp = options.temp
   },
 
   regions: {
@@ -19,19 +22,15 @@ const Dashboard = Backbone.Marionette.View.extend({
   onRender: function () {
     var self = this
 
-    $.ajax({
-      type: 'GET',
-      url: 'http://192.168.0.101:8000/temp',
-      success: (data) => {
-        self.showChildView('temp', new TempView({ temp: data }))
+    this.temp.fetch({
+      success: function (data) {
+        self.showChildView('temp', new TempView({ model: data }))
       }
     })
 
-    $.ajax({
-      type: 'GET',
-      url: 'http://192.168.0.101:8000/memory',
-      success: (data) => {
-        self.showChildView('memory', new MemoryView({ mem: data }))
+    this.memory.fetch({
+      success: function (data) {
+        self.showChildView('memory', new MemoryView({ model: data }))
       }
     })
 
@@ -41,11 +40,9 @@ const Dashboard = Backbone.Marionette.View.extend({
       }
     })
 
-    $.ajax({
-      type: 'GET',
-      url: 'http://192.168.0.101:8000/cpu',
-      success: (data) => {
-        self.showChildView('cpu', new CPUView({ cpu: data }))
+    this.cpu.fetch({
+      success: function (data) {
+        self.showChildView('cpu', new CPUView({ model: data }))
       }
     })
   }

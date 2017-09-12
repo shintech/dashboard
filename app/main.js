@@ -2,6 +2,7 @@ import App from 'backbone_app'
 import Router from './router'
 
 global.jQuery = require('jquery')
+global.io = require('socket.io-client')
 require('bootstrap')
 require('./public/css/style.css')
 

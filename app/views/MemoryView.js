@@ -1,15 +1,29 @@
+import Memory from '../models/Memory'
+
+var socket = io()
+
 const MemoryView = Backbone.Marionette.View.extend({
   template: require('../templates/memory-view-template.html'),
 
   initialize: function (options) {
-    this.mem = options.mem
+    socket.on('mem', data => {
+      this.model.set('free', data.free)
+      this.model.set('total', data.total)
+      this.model.set('used', data.used)
+    })
+  },
+
+  model: Memory,
+
+  modelEvents: {
+    'change': 'render'
   },
 
   serializeData: function () {
     return {
-      free: this.mem.body.free,
-      total: this.mem.body.total,
-      used: this.mem.body.used
+      free: this.model.get('free'),
+      total: this.model.get('total'),
+      used: this.model.get('used')
     }
   }
 })
